@@ -1,20 +1,30 @@
 var http    = require("http");
 var url     = require("url");
 
-function start(route) {
-    http.createServer(function(request, response) {
+function start(route, handle) 
+{
+    function onRequest(request, response)
+    {
+        var postData = '';
         var pathname = url.parse(request.url).pathname;
-        console.log('Requested pathname: ' + pathname);
+        console.log('Request received for pathname: ' + pathname);
         
-        route(pathname);
+        request.setEncoding('utf8');
         
-        response.writeHead(200, {
-            "Content-Type": "text/plain"
+        request.addListener('data', function (postDataChunk)
+        {
+            postData += postDataChunk;
+            console.log('Received postDataChunk: ' + postDataChunk + '.');
         });
-        response.write("Hello World");
-        response.end();
-    }).listen(process.env.C9_PORT);
+        
+        request.addListener('end', function ()
+        {
+            route(handle, pathname, response, request);
+        });
+        
+    }
     
+    http.createServer(onRequest).listen(process.env.C9_PORT);
     console.log("Server has started.");
 }
 
