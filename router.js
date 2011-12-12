@@ -3,6 +3,7 @@ function route(handle, pathname, response, request)
 {
     console.log('About to route: ' + pathname);
     
+    // TODO: Change to RegEx check.
     if(typeof handle[pathname] === 'function')
     {
         return handle[pathname](response, request);
