@@ -24,7 +24,7 @@ function start(route, handle)
         
     }
     
-    http.createServer(onRequest).listen(process.env.C9_PORT);
+    http.createServer(onRequest).listen(process.env ? (process.env.C9_PORT ? process.env.C9_PORT : '8080') : '8080');
     console.log("Server has started.");
 }
 
